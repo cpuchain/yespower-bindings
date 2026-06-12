@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Yespower Browser</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="./lib/yespower.umd.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <script>
+        const { Yespower, bytesToHex, hexToBytes } = YespowerWASM;
+
+        const tests = 30;
+
+        async function test() {
+            const yespower = await Yespower.init();
+
+            console.log(bytesToHex(yespower.Hash(hexToBytes('2538dad623dab29a3d5387804ab51dea411014fad9c47fb94b2d83e44358064b'))))
+        }
+
+        async function bench() {
+            const yespower = await Yespower.init();
+
+            const timeStart = Date.now();
+            
+            for (let i = 0; i < tests; ++i) {
+                const buf = hexToBytes(Number(i).toString(16));
+                yespower.Hash(buf);
+            }
+            
+            const timeTook = Date.now() - timeStart;
+            const hps = Math.floor(1000 * tests / timeTook);
+            
+            console.log(`${tests} Tests: ${Date.now() - timeStart}ms (${hps}H/s)`);
+        }
+
+        test();
+    </script>
+  </body>
+</html>

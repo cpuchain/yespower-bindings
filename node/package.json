@@ -1,0 +1,45 @@
+{
+    "name": "yespower",
+    "version": "1.0.4",
+    "description": "Node.js bindings of the Yespower hashing algorithm",
+    "license": "BSD 2-Clause",
+    "author": "CPUchain",
+    "type": "module",
+    "main": "./index.cjs",
+    "module": "./index.js",
+    "types": "./index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./index.js",
+            "require": "./index.cjs",
+            "default": "./index.js"
+        }
+    },
+    "gypfile": true,
+    "keywords": [
+        "yespower",
+        "proof-of-work",
+        "hashing",
+        "napi",
+        "node-addon-api"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/cpuchain/yespower-bindings.git"
+    },
+    "scripts": {
+        "lint": "eslint scripts/**/*.ts test/**/*.ts",
+        "bench": "node scripts/bench.js",
+        "test": "tsx --test",
+        "install": "node-gyp rebuild"
+    },
+    "dependencies": {
+        "node-addon-api": "^8.8.0"
+    },
+    "devDependencies": {
+        "@cpuchain/eslint": "^1.0.14",
+        "@types/node": "^25.9.3",
+        "tsx": "^4.22.4",
+        "typescript": "^6.0.3"
+    }
+}

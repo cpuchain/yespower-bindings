@@ -1,0 +1,50 @@
+{
+    "name": "yespower-wasm",
+    "version": "1.0.4",
+    "description": "WebAssembly module for Yespower",
+    "license": "BSD 2-Clause",
+    "author": "CPUchain",
+    "type": "module",
+    "main": "./lib/index.cjs",
+    "module": "./lib/index.js",
+    "browser": "./lib/yespower.umd.js",
+    "types": "./lib/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./lib/index.js",
+            "require": "./lib/index.cjs",
+            "default": "./lib/index.js"
+        }
+    },
+    "keywords": [
+        "yespower",
+        "proof-of-work",
+        "hashing",
+        "wasm",
+        "webassembly"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/cpuchain/yespower-bindings.git"
+    },
+    "scripts": {
+        "lint": "eslint src/**/*.ts scripts/**/*.ts test/*.ts --ignore-pattern src/*.d.ts",
+        "build:wasm-bundle": "tsx scripts/bundle.ts",
+        "build:wasm-beautify": "js-beautify src/yespower_wasm.js -o src/yespower_wasm.js",
+        "build:wasm": "emcc ../yespower-c/yespower-opt.c ../yespower-c/yespower.c ../yespower-c/sha256.c -O3 -s WASM=1 -s MODULARIZE=1 -s EXPORTED_FUNCTIONS=\"['_yespower_hash', '_yespower_wasm', '_malloc', '_free']\" -s EXPORTED_RUNTIME_METHODS=\"['ccall', 'cwrap', 'HEAPU8']\" -s EXPORT_NAME=\"yespower_wasm\" -s EXPORT_ES6=\"1\" -s INITIAL_HEAP=\"33554432\" -o src/yespower_wasm.js --emit-tsd yespower_wasm.d.ts && yarn build:wasm-beautify && yarn build:wasm-bundle",
+        "build": "tsc -p tsconfig.build.json --noEmit && rollup -c",
+        "bench": "node scripts/bench.js",
+        "test": "tsx --test"
+    },
+    "devDependencies": {
+        "@cpuchain/eslint": "^1.0.14",
+        "@cpuchain/rollup": "^1.0.13",
+        "@types/node": "^25.9.3",
+        "js-beautify": "^1.15.4",
+        "tsx": "^4.22.4",
+        "typescript": "^6.0.3"
+    },
+    "resolutions": {
+        "fast-glob": ">=3.3.3"
+    }
+}

@@ -1,0 +1,105 @@
+name: Node.js
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+
+jobs:
+  test-node:
+    name: Run Yespower Tests (Node.js)
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 'lts/*'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+        working-directory: ./node
+
+      - name: Run tests
+        run: yarn test
+        working-directory: ./node
+
+      - name: npm publish
+        if: startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-latest'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public
+        working-directory: ./node
+
+  test-wasm:
+    name: Run Yespower Tests (WASM)
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 'lts/*'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+        working-directory: ./wasm
+
+      - name: Run tests
+        run: yarn test
+        working-directory: ./wasm
+
+      - name: npm publish
+        if: startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-latest'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public
+        working-directory: ./wasm
+
+  test-go:
+    name: Run Yespower Tests (Go)
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: 'stable'
+
+      - name: Run tests (Unix)
+        if: runner.os != 'Windows'
+        run: go test -v ./...
+        working-directory: ./go
+
+      - name: Run tests (Windows)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: ./build.ps1
+        working-directory: ./go
