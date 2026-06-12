@@ -43,8 +43,5 @@
         "js-beautify": "^1.15.4",
         "tsx": "^4.22.4",
         "typescript": "^6.0.3"
-    },
-    "resolutions": {
-        "fast-glob": ">=3.3.3"
     }
 }
