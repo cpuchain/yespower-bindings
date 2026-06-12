@@ -64,3 +64,13 @@ Future work (not yet implemented):
 * **Typed-array (zero-copy) returns** instead of copying into a `Buffer`.
 * **Explicit `yespower_init_local` / `yespower_free_local` lifecycle** exposed
   to callers managing their own per-thread arenas.
+
+## References
+
+- [openwall/yespower](https://github.com/openwall/yespower) Reference implementation itself
+
+- [bellcoin-electrum/node-bellcoin-yespower](https://github.com/bellcoin-electrum/node-bellcoin-yespower) Another Node.js bindings
+
+- [bellcoin-electrum/bell_yespower_python3](https://github.com/bellcoin-electrum/bell_yespower_python3) Python3 bindings
+
+- [mraksoll4/yespower_go](https://github.com/mraksoll4/yespower_go) Golang bindings
